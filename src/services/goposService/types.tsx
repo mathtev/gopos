@@ -1,25 +1,20 @@
 export interface Product {
   id: number;
-  uid: string;
   name: string;
-  recipe_amount: number;
+  category: Category;
   type: string;
+  measure_type: string;
   category_id: number;
 }
 
 export interface Category {
   id: number;
-  uid: string;
   name: string;
-  updated_at: string;
-  status: string;
 }
 
-export type CategoryResponse = Promise<Category[] | void>;
-export type ProductResponse = Promise<Product[] | void>;
-
-export interface GposServiceResponse<T> {
+export interface ApiResponse<T> {
   data: T;
 }
 
+export type ServiceResponse<T> = Promise<void | T>;
 
