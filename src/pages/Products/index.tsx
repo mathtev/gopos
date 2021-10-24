@@ -20,12 +20,17 @@ const Products: React.FC = () => {
   return (
     <div>
       <Container className="container pt-4">
-        <h2 className="pb-2">Products</h2>
+        <div className="pb-2 d-flex align-items-center">
+          <span className="h2">Products</span>
+          <Link className="text-decoration-none ms-2" to={pathname + '/create'}>
+            <h2> + </h2>
+          </Link>
+        </div>
         <Row className="fw-bold pb-2">
           <Col xs={2}>#</Col>
           <Col xs={4}>Name</Col>
           <Col xs={4}>Category</Col>
-          <Col xs={1}>Action</Col>
+          <Col xs={1}>Actions</Col>
         </Row>
         {products.map((product: Product, idx: number) => (
           <Row key={product.id}>
@@ -33,11 +38,7 @@ const Products: React.FC = () => {
             <Col xs={4}>{product.name}</Col>
             <Col xs={4}>{product.category.name}</Col>
             <Col xs={1}>
-              <Link
-                to={pathname + '/' + product.id}
-              >
-                Edit
-              </Link>
+              <Link to={pathname + '/' + product.id}>Edit</Link>
             </Col>
           </Row>
         ))}

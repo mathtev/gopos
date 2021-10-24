@@ -17,7 +17,12 @@ const Categories: React.FC = () => {
   return (
     <div>
       <Container className="container pt-4">
-        <h2 className="pb-2">Categories</h2>
+        <div className="pb-2 d-flex align-items-center">
+          <span className="h2">Categories</span>
+          <Link className="text-decoration-none ms-2" to={pathname + '/create'}>
+            <h2> + </h2>
+          </Link>
+        </div>
         <Row className="fw-bold pb-2">
           <Col xs={1}>#</Col>
           <Col xs={5}>Name</Col>

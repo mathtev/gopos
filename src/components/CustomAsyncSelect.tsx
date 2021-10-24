@@ -1,12 +1,12 @@
 import { SingleValue } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { Category, ServiceResponse } from '../services/goposService/types';
+import { Category, ServiceResponse, Tax } from '../services/goposService/types';
 
 export type SelectOption = { label: string; value: number };
 
 interface SelectAsyncProps {
   selectedValue?: SelectOption;
-  getData: (name: string) => ServiceResponse<Category[]>;
+  getData: (name: string) => ServiceResponse<Category[]> | ServiceResponse<Tax[]>;
   handleSelectChange: (SelectOption: SelectOption) => void;
   name?: string;
 }

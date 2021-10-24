@@ -1,16 +1,11 @@
 import React from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
-import { useParams } from 'react-router';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { useGoposService } from '../../services/goposService/GoposServiceProvider';
-import './EditCategory.css';
 
-interface IRouterParams {
-  id: string;
-}
+import './CreateCategory.css';
 
-const EditCategory: React.FC = () => {
-  const id = parseInt(useParams<IRouterParams>().id);
-  const { updateCategory, getCategory } = useGoposService();
+const CreateCategory = () => {
+  const { createCategory } = useGoposService();
 
   const [formValues, setFormValues] = React.useState({ name: '' });
   const [formStatus, setFormStatus] = React.useState({
@@ -18,14 +13,6 @@ const EditCategory: React.FC = () => {
     error: false,
     loading: false,
   });
-
-  React.useEffect(() => {
-    getCategory(id).then((resp) => {
-      if (resp) {
-        setFormValues({ name: resp.name });
-      }
-    });
-  }, [getCategory, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,18 +25,17 @@ const EditCategory: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormStatus({ message: '', error: false, loading: true });
-    updateCategory(id, { id, name: formValues.name })
+    createCategory({ name: formValues.name })
       .then(() =>
-        setFormStatus({ message: 'Edit success', error: false, loading: false })
+        setFormStatus({ message: 'Create success', error: false, loading: false })
       )
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );
   };
-
   return (
     <div className="editCategory d-flex flex-column">
-      <h3>Edit Category</h3>
+      <h3>Create Category</h3>
       <Form onSubmit={handleSubmit}>
         {formStatus.message && !formStatus.error && (
           <Alert variant="success">{formStatus.message}</Alert>
@@ -75,4 +61,4 @@ const EditCategory: React.FC = () => {
   );
 };
 
-export default EditCategory;
+export default CreateCategory;

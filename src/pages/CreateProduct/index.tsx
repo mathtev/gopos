@@ -1,43 +1,25 @@
 import React from 'react';
 import { Alert, Form, Button } from 'react-bootstrap';
-import { useParams } from 'react-router';
-import CustomAsyncSelect, {
-  SelectOption,
-} from '../../components/CustomAsyncSelect';
+import CustomAsyncSelect, { SelectOption } from '../../components/CustomAsyncSelect';
 import { useGoposService } from '../../services/goposService/GoposServiceProvider';
-import { Product } from '../../services/goposService/types';
-import './EditProduct.css'
 
+import './CreateProduct.css';
 
-interface IRouterParams {
-  id: string;
-}
+const CreateProduct = () => {
+  const { createProduct, searchCategories, searchTaxes } = useGoposService();
 
-const EditProduct: React.FC = () => {
-  const id = parseInt(useParams<IRouterParams>().id);
-  const { updateProduct, getProduct, searchCategories } = useGoposService();
-
-  const [product, setProduct] = React.useState<Product | null>(null);
-  const [selectedCategory, setSelectedCategory] = React.useState<SelectOption>();
   const [formValues, setFormValues] = React.useState({
     name: '',
-    categoryName: '',
+    categoryId: '',
   });
   const [formStatus, setFormStatus] = React.useState({
     message: '',
     error: false,
     loading: false,
   });
+  const [selectedCategory, setSelectedCategory] = React.useState<SelectOption>();
+  const [selectedTax, setSelectedTax] = React.useState<SelectOption>();
 
-  React.useEffect(() => {
-    getProduct(id).then((resp) => {
-      if (resp) {
-        setProduct(resp);
-        setFormValues({ name: resp.name, categoryName: resp.category.name });
-        setSelectedCategory({label: resp.category.name, value: resp.category_id})
-      }
-    });
-  }, [getProduct, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -49,25 +31,29 @@ const EditProduct: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!product || !selectedCategory) return;
+    if(!selectedCategory || !selectedTax) return;
     setFormStatus({ message: '', error: false, loading: true });
-    const productId = id;
-    const data = { ...product };
-    data.category_id = selectedCategory.value;
-    data.name = formValues.name;
-
-    updateProduct(productId, data)
+    createProduct({
+      name: formValues.name,
+      category_id: selectedCategory.value,
+      type: 'BASIC',
+      measure_type: 'PACKAGE',
+      tax_id: selectedTax.value,
+    })
       .then(() =>
-        setFormStatus({ message: 'Edit success', error: false, loading: false })
+        setFormStatus({
+          message: 'Create success',
+          error: false,
+          loading: false,
+        })
       )
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );
   };
-
   return (
-    <div className="editProduct d-flex flex-column">
-      <h3>Edit Product</h3>
+    <div className="createProduct d-flex flex-column">
+      <h3>Create Product</h3>
       <Form onSubmit={handleSubmit}>
         {formStatus.message && !formStatus.error && (
           <Alert variant="success">{formStatus.message}</Alert>
@@ -86,12 +72,21 @@ const EditProduct: React.FC = () => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Nazwa kategorii</Form.Label>
+          <Form.Label>Category Name</Form.Label>
           <CustomAsyncSelect
             name="categorySelect"
             selectedValue={selectedCategory}
             getData={searchCategories}
             handleSelectChange={setSelectedCategory}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Tax</Form.Label>
+          <CustomAsyncSelect
+            name="categorySelect"
+            selectedValue={selectedTax}
+            getData={searchTaxes}
+            handleSelectChange={setSelectedTax}
           />
         </Form.Group>
         <Button variant="primary" type="submit">
@@ -102,4 +97,4 @@ const EditProduct: React.FC = () => {
   );
 };
 
-export default EditProduct;
+export default CreateProduct;
