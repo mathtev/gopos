@@ -8,16 +8,12 @@ import {
   Tax,
 } from './types';
 
-//error handling to be improved
 
 const getCategories = () => {
   return axiosInstance
     .get<ApiResponse<Category[]>>('ajax/219/product_categories')
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -32,9 +28,6 @@ const getProducts = () => {
     .get<ApiResponse<Product[]>>('ajax/219/products?include=category')
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -49,9 +42,6 @@ const searchTaxes = (name: string) => {
     .get<ApiResponse<Tax[]>>(`ajax/219/taxes?search=${name}`)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -66,9 +56,6 @@ const getCategory = (id: number) => {
     .get<ApiResponse<Category>>(`ajax/219/product_categories/${id}`)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -83,9 +70,6 @@ const searchCategories = (name: string) => {
     .get<ApiResponse<Category[]>>(`ajax/219/product_categories?search=${name}`)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -100,9 +84,6 @@ const getProduct = (id: number) => {
     .get<ApiResponse<Product>>(`ajax/219/products/${id}?include=category`)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -117,9 +98,6 @@ const createProduct = (data: CreateProductRequest) => {
     .post<ApiResponse<Product>>(`ajax/219/products`, data)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -134,9 +112,6 @@ const createCategory = (data: CreateCategoryRequest) => {
     .post<ApiResponse<Category>>(`ajax/219/product_categories`, data)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -151,9 +126,6 @@ const updateCategory = (id: number, data: Category) => {
     .put<ApiResponse<Category>>(`ajax/219/product_categories/${id}`, data)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
@@ -168,9 +140,6 @@ const updateProduct = (id: number, data: Product) => {
     .put<ApiResponse<Product>>(`ajax/219/products/${id}`, data)
     .then((resp) => {
       if (resp.status === 200) return { data: resp.data.data };
-      return {
-        error: { message: 'error in search categories' },
-      };
     })
     .catch((e: Error) => {
       console.error(e);
