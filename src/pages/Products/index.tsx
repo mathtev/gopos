@@ -12,9 +12,15 @@ const Products: React.FC = () => {
   const { getProducts } = useGoposService();
 
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [errors, setErrors] = React.useState<Error[]>([]);
 
   React.useEffect(() => {
-    getProducts().then((resp) => resp && setProducts(resp));
+    async function fetchData() {
+      const {error, data} = await getProducts() || {};
+      data && setProducts(data)
+    }
+    fetchData();
+    
   }, [getProducts]);
 
   return (

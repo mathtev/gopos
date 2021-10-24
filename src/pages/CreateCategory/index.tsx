@@ -26,9 +26,22 @@ const CreateCategory = () => {
     e.preventDefault();
     setFormStatus({ message: '', error: false, loading: true });
     createCategory({ name: formValues.name })
-      .then(() =>
-        setFormStatus({ message: 'Create success', error: false, loading: false })
-      )
+      .then((resp) => {
+        console.log(resp)
+        if (resp?.error) {
+          setFormStatus({
+            message: resp?.error.message,
+            error: true,
+            loading: false,
+          });
+          return;
+        }
+        setFormStatus({
+          message: 'Create success',
+          error: false,
+          loading: false,
+        });
+      })
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );

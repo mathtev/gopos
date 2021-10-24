@@ -1,6 +1,8 @@
 import React from 'react';
 import { Alert, Form, Button } from 'react-bootstrap';
-import CustomAsyncSelect, { SelectOption } from '../../components/CustomAsyncSelect';
+import CustomAsyncSelect, {
+  SelectOption,
+} from '../../components/CustomAsyncSelect';
 import { useGoposService } from '../../services/goposService/GoposServiceProvider';
 
 import './CreateProduct.css';
@@ -17,9 +19,9 @@ const CreateProduct = () => {
     error: false,
     loading: false,
   });
-  const [selectedCategory, setSelectedCategory] = React.useState<SelectOption>();
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<SelectOption>();
   const [selectedTax, setSelectedTax] = React.useState<SelectOption>();
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,7 +33,7 @@ const CreateProduct = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!selectedCategory || !selectedTax) return;
+    if (!selectedCategory || !selectedTax) return;
     setFormStatus({ message: '', error: false, loading: true });
     createProduct({
       name: formValues.name,
@@ -40,13 +42,21 @@ const CreateProduct = () => {
       measure_type: 'PACKAGE',
       tax_id: selectedTax.value,
     })
-      .then(() =>
+      .then((resp) => {
+        if (resp?.error) {
+          setFormStatus({
+            message: resp?.error.message,
+            error: true,
+            loading: false,
+          });
+          return;
+        }
         setFormStatus({
           message: 'Create success',
           error: false,
           loading: false,
-        })
-      )
+        });
+      })
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );

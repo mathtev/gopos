@@ -20,11 +20,11 @@ const EditCategory: React.FC = () => {
   });
 
   React.useEffect(() => {
-    getCategory(id).then((resp) => {
-      if (resp) {
-        setFormValues({ name: resp.name });
-      }
-    });
+    async function fetchData() {
+      const { error, data } = (await getCategory(id)) || {};
+      data && setFormValues({ name: data.name });
+    }
+    fetchData();
   }, [getCategory, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +39,21 @@ const EditCategory: React.FC = () => {
     e.preventDefault();
     setFormStatus({ message: '', error: false, loading: true });
     updateCategory(id, { id, name: formValues.name })
-      .then(() =>
-        setFormStatus({ message: 'Edit success', error: false, loading: false })
-      )
+      .then((resp) => {
+        if (resp?.error) {
+          setFormStatus({
+            message: resp?.error.message,
+            error: true,
+            loading: false,
+          });
+          return;
+        }
+        setFormStatus({
+          message: 'Edit success',
+          error: false,
+          loading: false,
+        });
+      })
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );

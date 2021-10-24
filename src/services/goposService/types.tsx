@@ -32,8 +32,8 @@ export interface CreateProductRequest {
 }
 
 export interface ApiResponse<T> {
-  data: T;
+  data?: T;
+  error?: { message: string };
 }
 
-export type ServiceResponse<T> = Promise<void | T>;
-
+export type ServiceResponse<T> = Promise<void | ApiResponse<T>>;

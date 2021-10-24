@@ -11,7 +11,11 @@ const Categories: React.FC = () => {
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   React.useEffect(() => {
-    getCategories().then((resp) => resp && setCategories(resp));
+    async function fetchData() {
+      const { error, data } = (await getCategories()) || {};
+      data && setCategories(data);
+    }
+    fetchData();
   }, [getCategories]);
 
   return (

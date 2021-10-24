@@ -6,8 +6,7 @@ import CustomAsyncSelect, {
 } from '../../components/CustomAsyncSelect';
 import { useGoposService } from '../../services/goposService/GoposServiceProvider';
 import { Product } from '../../services/goposService/types';
-import './EditProduct.css'
-
+import './EditProduct.css';
 
 interface IRouterParams {
   id: string;
@@ -18,7 +17,8 @@ const EditProduct: React.FC = () => {
   const { updateProduct, getProduct, searchCategories } = useGoposService();
 
   const [product, setProduct] = React.useState<Product | null>(null);
-  const [selectedCategory, setSelectedCategory] = React.useState<SelectOption>();
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<SelectOption>();
   const [formValues, setFormValues] = React.useState({
     name: '',
     categoryName: '',
@@ -30,13 +30,18 @@ const EditProduct: React.FC = () => {
   });
 
   React.useEffect(() => {
-    getProduct(id).then((resp) => {
-      if (resp) {
-        setProduct(resp);
-        setFormValues({ name: resp.name, categoryName: resp.category.name });
-        setSelectedCategory({label: resp.category.name, value: resp.category_id})
+    async function fetchData() {
+      const { error, data } = (await getProduct(id)) || {};
+      if (data) {
+        setProduct(data);
+        setFormValues({ name: data.name, categoryName: data.category.name });
+        setSelectedCategory({
+          label: data.category.name,
+          value: data.category_id,
+        });
       }
-    });
+    }
+    fetchData();
   }, [getProduct, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +62,21 @@ const EditProduct: React.FC = () => {
     data.name = formValues.name;
 
     updateProduct(productId, data)
-      .then(() =>
-        setFormStatus({ message: 'Edit success', error: false, loading: false })
-      )
+      .then((resp) => {
+        if (resp?.error) {
+          setFormStatus({
+            message: resp?.error.message,
+            error: true,
+            loading: false,
+          });
+          return;
+        }
+        setFormStatus({
+          message: 'Edit success',
+          error: false,
+          loading: false,
+        });
+      })
       .catch((e: Error) =>
         setFormStatus({ message: e.message, error: true, loading: false })
       );

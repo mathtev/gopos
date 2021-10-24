@@ -20,7 +20,7 @@ const CustomAsyncSelect: React.FC<SelectAsyncProps> = ({
   const loadData = (match: string) => {
     return getData(match)
       .then((resp) => {
-        return resp?.map((x, idx: number) => ({ label: x.name, value: x.id }));
+        return resp?.data?.map((x, idx: number) => ({ label: x.name, value: x.id }));
       })
       .catch((e: Error) => console.error(e.message));
   };
